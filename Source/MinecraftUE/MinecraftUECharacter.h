@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Block.h"
 #include "MinecraftUECharacter.generated.h"
 
 class UInputComponent;
@@ -56,6 +57,8 @@ public:
 
 protected:
 	virtual void BeginPlay();
+
+	virtual void Tick(float DeltaTime) override;
 
 public:
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
@@ -138,6 +141,16 @@ protected:
 	 */
 	bool EnableTouchscreenMovement(UInputComponent* InputComponent);
 
+
+private:
+	/* 플레이어 앞에 블럭이 있는지 확인 */
+	void CheckForBlocks();
+
+	/* 플레이어가 현재 바라보고 있는 블럭 저장 */
+	ABlock* CurrentBlock;
+
+	/* 블럭 체크 거리 */
+	float Reach;
 public:
 	/** Returns Mesh1P subobject **/
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
