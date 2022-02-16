@@ -47,15 +47,8 @@ void AWieldable::OnRadiusEnter(UPrimitiveComponent* OverlappedComp, AActor* Othe
 	AMinecraftUECharacter* Character = Cast<AMinecraftUECharacter>(OtherActor);
 	if (Character && bIsActive)
 	{
-		Character->FP_WieldedItem->SetSkeletalMesh(WieldableMesh->SkeletalMesh);
-		Character->MaterialType = MaterialType;
-		Character->ToolType = ToolType;
-
 		Character->AddItemToInventory(this);
-		
 		OnPickedUp();
-
-
 	}
 }
 

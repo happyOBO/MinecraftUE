@@ -165,6 +165,12 @@ private:
 	/* 현재 인벤토리 슬롯 idx */
 	int32 CurrentInventorySlot;
 
+	/* Wield 아이템 업데이트 */
+	void UpdateWieldedItem();
+
+	/* 현재 Wield 아이템 반환 */
+	AWieldable* GetCurrentlyWieldedItem();
+
 	/* 인벤토리 슬롯 이동 */
 	void MoveUpInventorySlot();
 	void MoveDownInventorySlot();

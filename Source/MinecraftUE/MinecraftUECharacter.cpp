@@ -274,20 +274,31 @@ bool AMinecraftUECharacter::EnableTouchscreenMovement(class UInputComponent* Pla
 	return false;
 }
 
+void AMinecraftUECharacter::UpdateWieldedItem()
+{
+	Inventory[CurrentInventorySlot] != nullptr ? FP_WieldedItem->SetSkeletalMesh(Inventory[CurrentInventorySlot]->WieldableMesh->SkeletalMesh) : FP_WieldedItem->SetSkeletalMesh(NULL);
+	ToolType = Inventory[CurrentInventorySlot]->ToolType;
+	MaterialType = Inventory[CurrentInventorySlot]->MaterialType;
+}
+
+AWieldable* AMinecraftUECharacter::GetCurrentlyWieldedItem()
+{
+	return Inventory[CurrentInventorySlot] != NULL ? Inventory[CurrentInventorySlot] : nullptr;
+}
+
 void AMinecraftUECharacter::MoveUpInventorySlot()
 {
 	CurrentInventorySlot = FMath::Abs((CurrentInventorySlot + 1) % NUM_OF_INVENTORY_SLOTS);
-	UE_LOG(LogTemp, Warning, TEXT("CurrentInventorySlot %d"), CurrentInventorySlot);
+	UpdateWieldedItem();
 }
 
 void AMinecraftUECharacter::MoveDownInventorySlot()
 {
 	if (CurrentInventorySlot == 0)
-	{
 		CurrentInventorySlot = 9;
-		return;
-	}
-	CurrentInventorySlot = FMath::Abs((CurrentInventorySlot - 1) % NUM_OF_INVENTORY_SLOTS);
+	else
+		CurrentInventorySlot = FMath::Abs((CurrentInventorySlot - 1) % NUM_OF_INVENTORY_SLOTS);
+	UpdateWieldedItem();
 }
 
 void AMinecraftUECharacter::OnHit()
