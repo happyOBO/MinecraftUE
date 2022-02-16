@@ -132,7 +132,7 @@ void AMinecraftUECharacter::SetupPlayerInputComponent(class UInputComponent* Pla
 	InputComponent->BindAction("InventoryUp", IE_Pressed, this, &AMinecraftUECharacter::MoveUpInventorySlot);
 	InputComponent->BindAction("InventoryDown", IE_Pressed, this, &AMinecraftUECharacter::MoveDownInventorySlot);
 
-
+	PlayerInputComponent->BindAction("Throw", IE_Pressed, this, &AMinecraftUECharacter::Throw);
 
 	// Enable touchscreen input, Bind fire event
 	if (EnableTouchscreenMovement(InputComponent) == false)
@@ -276,14 +276,59 @@ bool AMinecraftUECharacter::EnableTouchscreenMovement(class UInputComponent* Pla
 
 void AMinecraftUECharacter::UpdateWieldedItem()
 {
-	Inventory[CurrentInventorySlot] != nullptr ? FP_WieldedItem->SetSkeletalMesh(Inventory[CurrentInventorySlot]->WieldableMesh->SkeletalMesh) : FP_WieldedItem->SetSkeletalMesh(NULL);
-	ToolType = Inventory[CurrentInventorySlot]->ToolType;
-	MaterialType = Inventory[CurrentInventorySlot]->MaterialType;
+	if (Inventory[CurrentInventorySlot] != nullptr)
+	{
+		FP_WieldedItem->SetSkeletalMesh(Inventory[CurrentInventorySlot]->WieldableMesh->SkeletalMesh);
+		ToolType = Inventory[CurrentInventorySlot]->ToolType;
+		MaterialType = Inventory[CurrentInventorySlot]->MaterialType;
+
+	}
+	else
+	{
+		FP_WieldedItem->SetSkeletalMesh(NULL);
+		ToolType = AWieldable::ETool::Unarmed;
+		MaterialType = AWieldable::EMaterial::None;
+	}
 }
 
 AWieldable* AMinecraftUECharacter::GetCurrentlyWieldedItem()
 {
 	return Inventory[CurrentInventorySlot] != NULL ? Inventory[CurrentInventorySlot] : nullptr;
+}
+
+void AMinecraftUECharacter::Throw()
+{
+	AWieldable* ItemToThrow = GetCurrentlyWieldedItem();
+
+	// 던져 버릴 위치 계산
+	FHitResult LinetraceHit;
+
+	FVector StartTrace = FirstPersonCameraComponent->GetComponentLocation();
+	FVector EndTrace = (FirstPersonCameraComponent->GetForwardVector() * Reach) + StartTrace;
+
+	FCollisionQueryParams CQP;
+	CQP.AddIgnoredActor(this);
+
+	GetWorld()->LineTraceSingleByChannel(LinetraceHit, StartTrace, EndTrace, ECollisionChannel::ECC_WorldDynamic, CQP);
+
+	FVector DropLocation = EndTrace;
+
+	if (LinetraceHit.GetActor() != NULL)
+	{
+		DropLocation = (LinetraceHit.ImpactPoint + 20.0f);
+	}
+	if (ItemToThrow != nullptr)
+	{
+		UWorld* const World = GetWorld();
+		if (World != NULL)
+		{
+			ItemToThrow->SetActorLocationAndRotation(DropLocation, FRotator::ZeroRotator);
+			ItemToThrow->Hide(false);
+			Inventory[CurrentInventorySlot] = nullptr;
+		}
+	}
+
+	UpdateWieldedItem();
 }
 
 void AMinecraftUECharacter::MoveUpInventorySlot()

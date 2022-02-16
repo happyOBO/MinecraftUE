@@ -171,6 +171,9 @@ private:
 	/* 현재 Wield 아이템 반환 */
 	AWieldable* GetCurrentlyWieldedItem();
 
+	/* 현재 Wield 아이템 버리기 */
+	void Throw();
+
 	/* 인벤토리 슬롯 이동 */
 	void MoveUpInventorySlot();
 	void MoveDownInventorySlot();

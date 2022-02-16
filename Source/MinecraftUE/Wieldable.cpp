@@ -48,14 +48,16 @@ void AWieldable::OnRadiusEnter(UPrimitiveComponent* OverlappedComp, AActor* Othe
 	if (Character && bIsActive)
 	{
 		Character->AddItemToInventory(this);
-		OnPickedUp();
+		Hide(true);
 	}
 }
 
-void AWieldable::OnPickedUp()
+
+
+void AWieldable::Hide(bool bVis)
 {
-	WieldableMesh->SetVisibility(false);
-	bIsActive = false;
+	WieldableMesh->SetVisibility(!bVis);
+	bIsActive = !bVis;
 }
 
 void AWieldable::OnUsed()
