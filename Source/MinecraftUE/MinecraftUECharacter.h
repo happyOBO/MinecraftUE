@@ -20,13 +20,10 @@ class AMinecraftUECharacter : public ACharacter
 {
 	GENERATED_BODY()
 
+
 	/** Pawn mesh: 1st person view (arms; seen only by self) */
 	UPROPERTY(VisibleDefaultsOnly, Category=Mesh)
 	USkeletalMeshComponent* Mesh1P;
-
-	/** Gun mesh: 1st person view (seen only by self) */
-	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-	USkeletalMeshComponent* FP_WieldedItem;
 
 	/** Location on gun mesh where projectiles should spawn. */
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
@@ -61,6 +58,11 @@ protected:
 	virtual void Tick(float DeltaTime) override;
 
 public:
+
+	/** Gun mesh: 1st person view (seen only by self) */
+	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+	USkeletalMeshComponent* FP_WieldedItem;
+
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseTurnRate;
@@ -142,7 +144,7 @@ protected:
 	bool EnableTouchscreenMovement(UInputComponent* InputComponent);
 
 
-private:
+protected:
 	/* 참이면, 블럭 깨기 */
 	bool bIsBreaking;
 
@@ -168,6 +170,12 @@ private:
 	/* Timer handles */
 	FTimerHandle BlockBreakingHandle; // 도구에 따라 걸리는 시간이 다를 것임
 	FTimerHandle HitAnimHandle;
+
+public: 
+	/* 플레이어가 사용하는 도구 유형 및 등급 */
+	uint8 ToolType;
+	uint8 MaterialType;
+
 
 public:
 	/** Returns Mesh1P subobject **/

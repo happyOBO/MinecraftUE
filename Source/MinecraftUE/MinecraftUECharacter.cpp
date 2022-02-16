@@ -186,43 +186,6 @@ void AMinecraftUECharacter::EndTouch(const ETouchIndex::Type FingerIndex, const 
 	TouchItem.bIsPressed = false;
 }
 
-//Commenting this section out to be consistent with FPS BP template.
-//This allows the user to turn without using the right virtual joystick
-
-//void AMinecraftUECharacter::TouchUpdate(const ETouchIndex::Type FingerIndex, const FVector Location)
-//{
-//	if ((TouchItem.bIsPressed == true) && (TouchItem.FingerIndex == FingerIndex))
-//	{
-//		if (TouchItem.bIsPressed)
-//		{
-//			if (GetWorld() != nullptr)
-//			{
-//				UGameViewportClient* ViewportClient = GetWorld()->GetGameViewport();
-//				if (ViewportClient != nullptr)
-//				{
-//					FVector MoveDelta = Location - TouchItem.Location;
-//					FVector2D ScreenSize;
-//					ViewportClient->GetViewportSize(ScreenSize);
-//					FVector2D ScaledDelta = FVector2D(MoveDelta.X, MoveDelta.Y) / ScreenSize;
-//					if (FMath::Abs(ScaledDelta.X) >= 4.0 / ScreenSize.X)
-//					{
-//						TouchItem.bMoved = true;
-//						float Value = ScaledDelta.X * BaseTurnRate;
-//						AddControllerYawInput(Value);
-//					}
-//					if (FMath::Abs(ScaledDelta.Y) >= 4.0 / ScreenSize.Y)
-//					{
-//						TouchItem.bMoved = true;
-//						float Value = ScaledDelta.Y * BaseTurnRate;
-//						AddControllerPitchInput(Value);
-//					}
-//					TouchItem.Location = Location;
-//				}
-//				TouchItem.Location = Location;
-//			}
-//		}
-//	}
-//}
 
 void AMinecraftUECharacter::MoveForward(float Value)
 {
@@ -325,7 +288,11 @@ void AMinecraftUECharacter::CheckForBlocks()
 	GetWorld()->LineTraceSingleByChannel(LinetraceHit, StartTrace, EndTrace, ECollisionChannel::ECC_WorldDynamic, CQP);
 
 	ABlock* PotentialBlock = Cast<ABlock>(LinetraceHit.GetActor());
-
+	
+	if (PotentialBlock != CurrentBlock && CurrentBlock != nullptr) // 블럭이 깨지기 전에 다른 블럭으로 시선이 이동되었을 때
+	{
+		CurrentBlock->ResetBlock();
+	}
 	if (PotentialBlock == NULL)
 	{
 		CurrentBlock = nullptr;
@@ -333,6 +300,8 @@ void AMinecraftUECharacter::CheckForBlocks()
 	}
 	else
 	{
+		if(CurrentBlock != nullptr && !bIsBreaking)
+			CurrentBlock->ResetBlock();
 		CurrentBlock = PotentialBlock;
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, *CurrentBlock->GetName());
 	}
