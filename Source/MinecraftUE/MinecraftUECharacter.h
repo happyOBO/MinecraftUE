@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Block.h"
+#include "Wieldable.h"
 #include "MinecraftUECharacter.generated.h"
 
 class UInputComponent;
@@ -91,6 +92,19 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	uint8 bUsingMotionControllers : 1;
 
+	/* 인벤토리 HUD의 현재 슬롯 얻기*/
+	UFUNCTION(BlueprintPure, Category = HUD)
+	int32 GetCurrentInventorySlot();
+
+	/* 인벤토리에 아이템 추가 */
+	UFUNCTION(BlueprintCallable, Category = Inventory)
+	bool AddItemToInventory(AWieldable* Item);
+
+	/* 주어진 아이템 썸네일 가져오기 */
+	UFUNCTION(BlueprintPure, Category = Inventory)
+	UTexture2D* GetThumbnailAtInventorySlot(uint8 Slot);
+
+
 protected:
 	
 	/** Fires a projectile. */
@@ -144,7 +158,17 @@ protected:
 	bool EnableTouchscreenMovement(UInputComponent* InputComponent);
 
 
-protected:
+private:
+	/* 인벤토리 슬롯 개수 */
+	const int32 NUM_OF_INVENTORY_SLOTS = 10;
+
+	/* 현재 인벤토리 슬롯 idx */
+	int32 CurrentInventorySlot;
+
+	/* 인벤토리 슬롯 이동 */
+	void MoveUpInventorySlot();
+	void MoveDownInventorySlot();
+
 	/* 참이면, 블럭 깨기 */
 	bool bIsBreaking;
 
@@ -170,6 +194,10 @@ protected:
 	/* Timer handles */
 	FTimerHandle BlockBreakingHandle; // 도구에 따라 걸리는 시간이 다를 것임
 	FTimerHandle HitAnimHandle;
+
+	UPROPERTY(EditAnywhere)
+	TArray<AWieldable*> Inventory;
+
 
 public: 
 	/* 플레이어가 사용하는 도구 유형 및 등급 */

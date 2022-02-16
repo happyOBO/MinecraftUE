@@ -81,7 +81,8 @@ AMinecraftUECharacter::AMinecraftUECharacter()
 	VR_MuzzleLocation->SetRelativeRotation(FRotator(0.0f, 90.0f, 0.0f));		// Counteract the rotation of the VR gun model.
 
 	Reach = 250.0f;
-	
+	Inventory.SetNum(NUM_OF_INVENTORY_SLOTS);
+
 	// Uncomment the following line to turn motion controllers on by default:
 	//bUsingMotionControllers = true;
 
@@ -128,6 +129,11 @@ void AMinecraftUECharacter::SetupPlayerInputComponent(class UInputComponent* Pla
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
+	InputComponent->BindAction("InventoryUp", IE_Pressed, this, &AMinecraftUECharacter::MoveUpInventorySlot);
+	InputComponent->BindAction("InventoryDown", IE_Pressed, this, &AMinecraftUECharacter::MoveDownInventorySlot);
+
+
+
 	// Enable touchscreen input, Bind fire event
 	if (EnableTouchscreenMovement(InputComponent) == false)
 	{
@@ -149,6 +155,41 @@ void AMinecraftUECharacter::SetupPlayerInputComponent(class UInputComponent* Pla
 	PlayerInputComponent->BindAxis("TurnRate", this, &AMinecraftUECharacter::TurnAtRate);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AMinecraftUECharacter::LookUpAtRate);
+}
+
+int32 AMinecraftUECharacter::GetCurrentInventorySlot()
+{
+	return CurrentInventorySlot;
+}
+
+bool AMinecraftUECharacter::AddItemToInventory(AWieldable* Item)
+{
+
+	if (Item != NULL)
+	{
+
+		const int32 AvailableSlot = Inventory.Find(nullptr);
+		if (AvailableSlot != INDEX_NONE)
+		{
+			Inventory[AvailableSlot] = Item;
+			UE_LOG(LogTemp, Warning, TEXT("Inventory %d"), AvailableSlot);
+			return true;
+		}
+		else
+			return false;
+	}
+	return false;
+}
+
+UTexture2D* AMinecraftUECharacter::GetThumbnailAtInventorySlot(uint8 Slot)
+{
+	if (Inventory[Slot] != NULL)
+	{
+		return Inventory[Slot]->PickupThumbnail;
+	}
+
+	else
+		return nullptr;
 }
 
 void AMinecraftUECharacter::OnFire()
@@ -194,6 +235,7 @@ void AMinecraftUECharacter::MoveForward(float Value)
 		// add movement in that direction
 		AddMovementInput(GetActorForwardVector(), Value);
 	}
+	
 }
 
 void AMinecraftUECharacter::MoveRight(float Value)
@@ -230,6 +272,22 @@ bool AMinecraftUECharacter::EnableTouchscreenMovement(class UInputComponent* Pla
 	}
 	
 	return false;
+}
+
+void AMinecraftUECharacter::MoveUpInventorySlot()
+{
+	CurrentInventorySlot = FMath::Abs((CurrentInventorySlot + 1) % NUM_OF_INVENTORY_SLOTS);
+	UE_LOG(LogTemp, Warning, TEXT("CurrentInventorySlot %d"), CurrentInventorySlot);
+}
+
+void AMinecraftUECharacter::MoveDownInventorySlot()
+{
+	if (CurrentInventorySlot == 0)
+	{
+		CurrentInventorySlot = 9;
+		return;
+	}
+	CurrentInventorySlot = FMath::Abs((CurrentInventorySlot - 1) % NUM_OF_INVENTORY_SLOTS);
 }
 
 void AMinecraftUECharacter::OnHit()
