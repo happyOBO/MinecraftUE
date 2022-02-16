@@ -15,7 +15,6 @@ public:
 	// Sets default values for this actor's properties
 	ABlock();
 
-protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -23,4 +22,20 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	UStaticMeshComponent* SM_Block;
 
+	// 깨질수 있는 최소 도구
+	uint8 MinimumMaterial = 3;
+
+	UPROPERTY(EditDefaultsOnly)
+	float Resistance;
+
+	UPROPERTY(BlueprintReadWrite)
+	float BreakingStage;
+
+	/* 블럭을 깰 때 호출 */
+	void Break();
+	/* 블럭을 깨려다가 말때 호출 */
+	void ResetBlock();
+
+	/* breaking stage가 마지막 단계일 때 찐으로 깨지는 함수 호출*/
+	void OnBroken(bool HasRequiredPickaxe);
 };

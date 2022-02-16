@@ -143,14 +143,32 @@ protected:
 
 
 private:
+	/* 참이면, 블럭 깨기 */
+	bool bIsBreaking;
+
+	/* Called when hitting with a tool */
+	void OnHit();
+	void EndHIt();
+
+	/* 캐는 애니메이션 실행 */
+	void PlayHitAnim();
+
 	/* 플레이어 앞에 블럭이 있는지 확인 */
 	void CheckForBlocks();
+
+	/* 블럭을 깨기를 원할 때 호출 */
+	void BreakBlock();
 
 	/* 플레이어가 현재 바라보고 있는 블럭 저장 */
 	ABlock* CurrentBlock;
 
 	/* 블럭 체크 거리 */
 	float Reach;
+
+	/* Timer handles */
+	FTimerHandle BlockBreakingHandle; // 도구에 따라 걸리는 시간이 다를 것임
+	FTimerHandle HitAnimHandle;
+
 public:
 	/** Returns Mesh1P subobject **/
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }

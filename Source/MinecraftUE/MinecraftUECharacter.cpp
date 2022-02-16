@@ -128,11 +128,13 @@ void AMinecraftUECharacter::SetupPlayerInputComponent(class UInputComponent* Pla
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
-	// Bind fire event
-	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AMinecraftUECharacter::OnFire);
+	// Enable touchscreen input, Bind fire event
+	if (EnableTouchscreenMovement(InputComponent) == false)
+	{
+		PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AMinecraftUECharacter::OnHit);
+		PlayerInputComponent->BindAction("Interact", IE_Released, this, &AMinecraftUECharacter::EndHIt);
 
-	// Enable touchscreen input
-	EnableTouchscreenMovement(PlayerInputComponent);
+	}
 
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AMinecraftUECharacter::OnResetVR);
 
@@ -151,16 +153,7 @@ void AMinecraftUECharacter::SetupPlayerInputComponent(class UInputComponent* Pla
 
 void AMinecraftUECharacter::OnFire()
 {
-	// try and play a firing animation if specified
-	if (FireAnimation != nullptr)
-	{
-		// Get the animation object for the arms mesh
-		UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
-		if (AnimInstance != nullptr)
-		{
-			AnimInstance->Montage_Play(FireAnimation, 1.f);
-		}
-	}
+
 }
 
 void AMinecraftUECharacter::OnResetVR()
@@ -276,6 +269,49 @@ bool AMinecraftUECharacter::EnableTouchscreenMovement(class UInputComponent* Pla
 	return false;
 }
 
+void AMinecraftUECharacter::OnHit()
+{
+	PlayHitAnim();
+
+	if (CurrentBlock != nullptr)
+	{
+		bIsBreaking = true;
+		float TimerBetweenBreaks = ((CurrentBlock->Resistance) / 100.0f) / 2; // 2, CurrenctTool->Power
+		// 타이머 지정 , 1. 블럭 깨지는 시간 2. 플레이어 스윙 애니메이션 유지 시간
+		GetWorld()->GetTimerManager().SetTimer(BlockBreakingHandle, this, &AMinecraftUECharacter::BreakBlock, TimerBetweenBreaks, true);
+		GetWorld()->GetTimerManager().SetTimer(HitAnimHandle, this, &AMinecraftUECharacter::PlayHitAnim, 0.4f, true); // 스윙질 할때 클릭 빨리누르던 느리게 누르던 0.4초로 고정
+	
+	}
+}
+
+void AMinecraftUECharacter::EndHIt()
+{
+	GetWorld()->GetTimerManager().ClearTimer(BlockBreakingHandle);
+	GetWorld()->GetTimerManager().ClearTimer(HitAnimHandle);
+
+	bIsBreaking = false;
+
+	if (CurrentBlock != nullptr)
+	{
+		CurrentBlock->ResetBlock();
+	}
+
+}
+
+void AMinecraftUECharacter::PlayHitAnim()
+{
+	// try and play a firing animation if specified
+	if (FireAnimation != nullptr)
+	{
+		// Get the animation object for the arms mesh
+		UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
+		if (AnimInstance != nullptr)
+		{
+			AnimInstance->Montage_Play(FireAnimation, 1.f);
+		}
+	}
+}
+
 void AMinecraftUECharacter::CheckForBlocks()
 {
 	FHitResult LinetraceHit;
@@ -299,5 +335,13 @@ void AMinecraftUECharacter::CheckForBlocks()
 	{
 		CurrentBlock = PotentialBlock;
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, *CurrentBlock->GetName());
+	}
+}
+
+void AMinecraftUECharacter::BreakBlock()
+{
+	if (bIsBreaking && CurrentBlock != nullptr && !CurrentBlock->IsPendingKill())
+	{
+		CurrentBlock->Break();
 	}
 }
