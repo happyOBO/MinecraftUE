@@ -15,18 +15,9 @@ public:
 	// Sets default values for this actor's properties
 	ABlock();
 
-
-	enum EStatus : uint8
-	{
-		Placed,
-		Item,
-	};
-
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 
 	// 블럭이 모두 큐브 스탵틱 메시를 갖기 위해 설정
 	UPROPERTY(EditDefaultsOnly)
@@ -41,9 +32,8 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	float BreakingStage;
 
-	/* 블럭 상태 배치되어 있거나 아이템화 */
-	UPROPERTY(BlueprintReadWrite)
-	uint8 BlockStatus;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Blueprint Wieldable Block", Meta = (BlueprintProtected = "true"))
+	TSubclassOf<class AActor> WieldableBlock;
 
 	/* 블럭을 깰 때 호출 */
 	void Break();
