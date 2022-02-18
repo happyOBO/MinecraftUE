@@ -33,6 +33,9 @@ public:
 	/* HUDState 상태 반환 */
 	uint8 GetHUDState();
 
+	/* HUDState 상태 설정 */
+	void SetHUDState(EHUDState state);
+
 	/* ApplyHUDChanges 함수 호출시 변경된 HUD 상태 적용*/
 	UFUNCTION(BlueprintCallable, Category = "HUD Functions")
 	void ChangeHUDState(uint8 NewState);

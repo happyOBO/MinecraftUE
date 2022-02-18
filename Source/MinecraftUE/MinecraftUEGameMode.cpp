@@ -21,7 +21,7 @@ AMinecraftUEGameMode::AMinecraftUEGameMode()
 void AMinecraftUEGameMode::BeginPlay()
 {
 	Super::BeginPlay();
-	HUDState = EHUDState::HS_Craft_Menu;
+	HUDState = EHUDState::HS_Ingame;
 	ApplyHUDChanges();
 }
 
@@ -61,6 +61,11 @@ void AMinecraftUEGameMode::ApplyHUDChanges()
 uint8 AMinecraftUEGameMode::GetHUDState()
 {
 	return HUDState;
+}
+
+void AMinecraftUEGameMode::SetHUDState(EHUDState state)
+{
+	HUDState = state;
 }
 
 void AMinecraftUEGameMode::ChangeHUDState(uint8 NewState)

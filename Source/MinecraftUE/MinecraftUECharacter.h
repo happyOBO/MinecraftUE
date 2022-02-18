@@ -176,6 +176,9 @@ private:
 	/* 현재 Wield 아이템 버리기 */
 	void Throw();
 
+	/* HUD 모드 CraftMenu로 변경 */
+	void OpenCraftMenu();
+
 	/* 인벤토리 슬롯 이동 */
 	void MoveUpInventorySlot();
 	void MoveDownInventorySlot();

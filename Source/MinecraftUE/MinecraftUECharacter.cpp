@@ -11,6 +11,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "MotionControllerComponent.h"
 #include "XRMotionControllerBase.h" // for FXRMotionControllerBase::RightHandSourceId
+#include "MinecraftUEGameMode.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
@@ -135,7 +136,9 @@ void AMinecraftUECharacter::SetupPlayerInputComponent(class UInputComponent* Pla
 
 	InputComponent->BindAction("InventoryUp", IE_Pressed, this, &AMinecraftUECharacter::MoveUpInventorySlot);
 	InputComponent->BindAction("InventoryDown", IE_Pressed, this, &AMinecraftUECharacter::MoveDownInventorySlot);
-
+	
+	PlayerInputComponent->BindAction("CraftMenu", IE_Pressed, this, &AMinecraftUECharacter::OpenCraftMenu);
+	
 	PlayerInputComponent->BindAction("Throw", IE_Pressed, this, &AMinecraftUECharacter::Throw);
 
 	// Enable touchscreen input, Bind fire event
@@ -335,6 +338,13 @@ void AMinecraftUECharacter::Throw()
 	UpdateWieldedItem();
 }
 
+void AMinecraftUECharacter::OpenCraftMenu()
+{
+	auto GameMode = Cast<AMinecraftUEGameMode>(GetWorld()->GetAuthGameMode());
+	GameMode->SetHUDState(AMinecraftUEGameMode::EHUDState::HS_Craft_Menu);
+	GameMode->ApplyHUDChanges();
+}
+
 void AMinecraftUECharacter::MoveUpInventorySlot()
 {
 	CurrentInventorySlot = FMath::Abs((CurrentInventorySlot + 1) % NUM_OF_INVENTORY_SHORTCUT_SLOTS);
@@ -344,7 +354,7 @@ void AMinecraftUECharacter::MoveUpInventorySlot()
 void AMinecraftUECharacter::MoveDownInventorySlot()
 {
 	if (CurrentInventorySlot == 0)
-		CurrentInventorySlot = 9;
+		CurrentInventorySlot = NUM_OF_INVENTORY_SHORTCUT_SLOTS - 1;
 	else
 		CurrentInventorySlot = FMath::Abs((CurrentInventorySlot - 1) % NUM_OF_INVENTORY_SHORTCUT_SLOTS);
 	UpdateWieldedItem();
