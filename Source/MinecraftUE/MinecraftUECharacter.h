@@ -159,8 +159,10 @@ protected:
 
 
 private:
+	/* 인벤토리 쇼트 컷 슬롯 개수 */
+	const int32 NUM_OF_INVENTORY_SHORTCUT_SLOTS = 9;
 	/* 인벤토리 슬롯 개수 */
-	const int32 NUM_OF_INVENTORY_SLOTS = 10;
+	const int32 NUM_OF_INVENTORY_SLOTS = 36;
 
 	/* 현재 인벤토리 슬롯 idx */
 	int32 CurrentInventorySlot;

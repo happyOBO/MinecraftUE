@@ -108,6 +108,10 @@ void AMinecraftUECharacter::BeginPlay()
 		VR_Gun->SetHiddenInGame(true, true);
 		Mesh1P->SetHiddenInGame(false, true);
 	}
+
+
+	
+
 }
 
 void AMinecraftUECharacter::Tick(float DeltaTime)
@@ -333,7 +337,7 @@ void AMinecraftUECharacter::Throw()
 
 void AMinecraftUECharacter::MoveUpInventorySlot()
 {
-	CurrentInventorySlot = FMath::Abs((CurrentInventorySlot + 1) % NUM_OF_INVENTORY_SLOTS);
+	CurrentInventorySlot = FMath::Abs((CurrentInventorySlot + 1) % NUM_OF_INVENTORY_SHORTCUT_SLOTS);
 	UpdateWieldedItem();
 }
 
@@ -342,7 +346,7 @@ void AMinecraftUECharacter::MoveDownInventorySlot()
 	if (CurrentInventorySlot == 0)
 		CurrentInventorySlot = 9;
 	else
-		CurrentInventorySlot = FMath::Abs((CurrentInventorySlot - 1) % NUM_OF_INVENTORY_SLOTS);
+		CurrentInventorySlot = FMath::Abs((CurrentInventorySlot - 1) % NUM_OF_INVENTORY_SHORTCUT_SLOTS);
 	UpdateWieldedItem();
 }
 
