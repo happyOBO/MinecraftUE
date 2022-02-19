@@ -188,6 +188,15 @@ bool AMinecraftUECharacter::AddItemToInventory(AWieldable* Item)
 	return false;
 }
 
+bool AMinecraftUECharacter::RemoveItemToInventory(int idx)
+{
+	if (NUM_OF_INVENTORY_SLOTS <= idx || idx < 0)
+		return false;
+
+	Inventory[idx] = nullptr;
+	return true;
+}
+
 UTexture2D* AMinecraftUECharacter::GetThumbnailAtInventorySlot(uint8 Slot)
 {
 	if (Inventory[Slot] != NULL)

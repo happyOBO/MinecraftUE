@@ -100,10 +100,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Inventory)
 	bool AddItemToInventory(AWieldable* Item);
 
+	/* 인벤토리에 아이템 삭제 */
+	UFUNCTION(BlueprintCallable, Category = Inventory)
+	bool RemoveItemToInventory(int idx);
+
 	/* 주어진 아이템 썸네일 가져오기 */
 	UFUNCTION(BlueprintPure, Category = Inventory)
 	UTexture2D* GetThumbnailAtInventorySlot(uint8 Slot);
 
+	/* 총 인벤토리 슬롯 개수 반환 */
 	UFUNCTION(BlueprintPure, Category = Inventory)
 	int32 GetNumberOfInventorySlot();
 
@@ -215,6 +220,8 @@ private:
 	UPROPERTY(EditAnywhere)
 	TArray<AWieldable*> Inventory;
 
+	UPROPERTY(EditAnywhere)
+	TArray<AWieldable*> Inventory;
 
 public: 
 	/* 플레이어가 사용하는 도구 유형 및 등급 */
