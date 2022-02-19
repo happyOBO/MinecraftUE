@@ -81,7 +81,7 @@ AMinecraftUECharacter::AMinecraftUECharacter()
 	VR_MuzzleLocation->SetRelativeLocation(FVector(0.000004, 53.999992, 10.000000));
 	VR_MuzzleLocation->SetRelativeRotation(FRotator(0.0f, 90.0f, 0.0f));		// Counteract the rotation of the VR gun model.
 
-	Reach = 250.0f;
+	Reach = 300.0f;
 	Inventory.SetNum(NUM_OF_INVENTORY_SLOTS);
 	CraftInventory.SetNum(NUM_OF_CRAFT_INVENTORY_SLOTS);
 
@@ -121,6 +121,10 @@ void AMinecraftUECharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	CheckForBlocks();
+
+	//auto GameMode = Cast<AMinecraftUEGameMode>(GetWorld()->GetAuthGameMode());
+	//if (GameMode->GetHUDState() == AMinecraftUEGameMode::EHUDState::HS_Craft_Menu)
+	UpdatePossibleCraftWeildable();
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -222,6 +226,15 @@ UTexture2D* AMinecraftUECharacter::GetThumbnailAtCraftInventorySlot(uint8 Slot)
 		return nullptr;
 }
 
+UTexture2D* AMinecraftUECharacter::GetThumbnailAtPossibleCraftWeildable()
+{
+	if (PossibleCraftToggle)
+		return Thumbnail;
+	else
+		return nullptr;
+}
+
+
 int32 AMinecraftUECharacter::GetNumberOfInventorySlot()
 {
 	return NUM_OF_INVENTORY_SLOTS;
@@ -258,6 +271,30 @@ bool AMinecraftUECharacter::MoveToInventory(uint8 fromCraftInventoryIdx)
 	else
 		return false;
 
+}
+
+bool AMinecraftUECharacter::GetCraftWeidable(uint8 toInventoryIdx)
+{
+
+	if (NUM_OF_INVENTORY_SLOTS <= toInventoryIdx || toInventoryIdx < 0)
+		return false;
+
+	// 바로 스폰 되자마자 오버랩 되어서 인벤토리에 두개가 추가되는 상황
+	// 나중에 수정 필요
+	FVector location = GetActorLocation();
+	location.X += 100.0f;
+	auto CraftItem = Cast<AWieldable>(GetWorld()->SpawnActor<AActor>(PossibleWieldable, location, GetActorRotation()));
+	Inventory[toInventoryIdx] = CraftItem;
+	CraftItem->Hide(true);
+
+	// Craft Inventory 초기화
+	PossibleCraftToggle = false;
+	for (int i = 0; i < NUM_OF_CRAFT_INVENTORY_SLOTS; i++)
+	{
+		CraftInventory[i] = nullptr;
+	}
+
+	return true;
 }
 
 void AMinecraftUECharacter::OnFire()
@@ -513,4 +550,23 @@ void AMinecraftUECharacter::BreakBlock()
 	{
 		CurrentBlock->Break();
 	}
+}
+
+/* 테스트, 수정 예정 */
+void AMinecraftUECharacter::UpdatePossibleCraftWeildable()
+{
+	if (CraftInventory[0] == nullptr || CraftInventory[0]->MaterialType != AWieldable::EMaterial::Stone)
+		return ;
+	if (CraftInventory[1] == nullptr || CraftInventory[1]->MaterialType != AWieldable::EMaterial::Stone)
+		return ;
+	if (CraftInventory[2] == nullptr || CraftInventory[2]->MaterialType != AWieldable::EMaterial::Stone)
+		return ;
+	if (CraftInventory[4] == nullptr || CraftInventory[4]->MaterialType != AWieldable::EMaterial::Wooden)
+		return ;
+	if (CraftInventory[7] == nullptr || CraftInventory[7]->MaterialType != AWieldable::EMaterial::Wooden)
+		return ;
+
+	PossibleCraftToggle = true;
+	
+
 }

@@ -112,6 +112,10 @@ public:
 	UFUNCTION(BlueprintPure, Category = Inventory)
 	UTexture2D* GetThumbnailAtCraftInventorySlot(uint8 Slot);
 
+	/* 주어진 아이템 썸네일 가져오기 */
+	UFUNCTION(BlueprintPure, Category = Inventory)
+	UTexture2D* GetThumbnailAtPossibleCraftWeildable();
+
 	/* 총 인벤토리 슬롯 개수 반환 */
 	UFUNCTION(BlueprintPure, Category = Inventory)
 	int32 GetNumberOfInventorySlot();
@@ -124,10 +128,21 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Inventory)
 	bool MoveToCraftInventory(uint8 fromInventoryIdx , uint8 toCraftInventoryIdx);
 
-
 	/* Craft 인벤토리에서 인벤토리로 이동*/
 	UFUNCTION(BlueprintCallable, Category = Inventory)
 	bool MoveToInventory(uint8 fromCraftInventoryIdx);
+
+	/* Craft된 아이템 인벤토리로 이동*/
+	UFUNCTION(BlueprintCallable, Category = Inventory)
+	bool GetCraftWeidable(uint8 toInventoryIdx);
+
+	/* 테스트 용 텍스처*/
+	UPROPERTY(EditAnywhere)
+	UTexture2D* Thumbnail;
+
+	/* 테스트 용 Weildable*/
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Blueprint Wieldable", Meta = (BlueprintProtected = "true"))
+	TSubclassOf<class AActor> PossibleWieldable;
 
 protected:
 	
@@ -230,6 +245,12 @@ private:
 
 	/* 블럭 체크 거리 */
 	float Reach;
+
+	void UpdatePossibleCraftWeildable();
+
+	/* 테스트 용 토글 */
+	bool PossibleCraftToggle;
+
 
 	/* Timer handles */
 	FTimerHandle BlockBreakingHandle; // 도구에 따라 걸리는 시간이 다를 것임
