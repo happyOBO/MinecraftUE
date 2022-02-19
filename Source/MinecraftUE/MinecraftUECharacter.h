@@ -104,6 +104,9 @@ public:
 	UFUNCTION(BlueprintPure, Category = Inventory)
 	UTexture2D* GetThumbnailAtInventorySlot(uint8 Slot);
 
+	UFUNCTION(BlueprintPure, Category = Inventory)
+	int32 GetNumberOfInventorySlot();
+
 
 protected:
 	

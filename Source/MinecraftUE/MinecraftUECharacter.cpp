@@ -199,6 +199,11 @@ UTexture2D* AMinecraftUECharacter::GetThumbnailAtInventorySlot(uint8 Slot)
 		return nullptr;
 }
 
+int32 AMinecraftUECharacter::GetNumberOfInventorySlot()
+{
+	return NUM_OF_INVENTORY_SLOTS;
+}
+
 void AMinecraftUECharacter::OnFire()
 {
 
@@ -341,7 +346,11 @@ void AMinecraftUECharacter::Throw()
 void AMinecraftUECharacter::OpenCraftMenu()
 {
 	auto GameMode = Cast<AMinecraftUEGameMode>(GetWorld()->GetAuthGameMode());
-	GameMode->SetHUDState(AMinecraftUEGameMode::EHUDState::HS_Craft_Menu);
+	if (GameMode->GetHUDState() == AMinecraftUEGameMode::EHUDState::HS_Craft_Menu)
+		GameMode->SetHUDState(AMinecraftUEGameMode::EHUDState::HS_Ingame);
+	else
+		GameMode->SetHUDState(AMinecraftUEGameMode::EHUDState::HS_Craft_Menu);
+
 	GameMode->ApplyHUDChanges();
 }
 
