@@ -83,6 +83,7 @@ AMinecraftUECharacter::AMinecraftUECharacter()
 
 	Reach = 250.0f;
 	Inventory.SetNum(NUM_OF_INVENTORY_SLOTS);
+	CraftInventory.SetNum(NUM_OF_CRAFT_INVENTORY_SLOTS);
 
 	// Uncomment the following line to turn motion controllers on by default:
 	//bUsingMotionControllers = true;
@@ -197,6 +198,8 @@ bool AMinecraftUECharacter::RemoveItemToInventory(int idx)
 	return true;
 }
 
+
+
 UTexture2D* AMinecraftUECharacter::GetThumbnailAtInventorySlot(uint8 Slot)
 {
 	if (Inventory[Slot] != NULL)
@@ -208,9 +211,53 @@ UTexture2D* AMinecraftUECharacter::GetThumbnailAtInventorySlot(uint8 Slot)
 		return nullptr;
 }
 
+UTexture2D* AMinecraftUECharacter::GetThumbnailAtCraftInventorySlot(uint8 Slot)
+{
+	if (CraftInventory[Slot] != NULL)
+	{
+		return CraftInventory[Slot]->PickupThumbnail;
+	}
+
+	else
+		return nullptr;
+}
+
 int32 AMinecraftUECharacter::GetNumberOfInventorySlot()
 {
 	return NUM_OF_INVENTORY_SLOTS;
+}
+
+int32 AMinecraftUECharacter::GetNumberOfCraftInventorySlot()
+{
+	return NUM_OF_CRAFT_INVENTORY_SLOTS;
+}
+
+bool AMinecraftUECharacter::MoveToCraftInventory(uint8 fromInventoryIdx, uint8 toCraftInventoryIdx)
+{
+	if (toCraftInventoryIdx < 0 || NUM_OF_CRAFT_INVENTORY_SLOTS <= toCraftInventoryIdx)
+		return false;
+	if (NUM_OF_INVENTORY_SLOTS <= fromInventoryIdx || fromInventoryIdx < 0)
+		return false;
+	CraftInventory[toCraftInventoryIdx] = Inventory[fromInventoryIdx];
+	Inventory[fromInventoryIdx] = nullptr;
+	return true;
+}
+
+bool AMinecraftUECharacter::MoveToInventory(uint8 fromCraftInventoryIdx)
+{
+	if (fromCraftInventoryIdx < 0 || NUM_OF_CRAFT_INVENTORY_SLOTS <= fromCraftInventoryIdx)
+		return false;
+
+	const int32 AvailableSlot = Inventory.Find(nullptr);
+	if (AvailableSlot != INDEX_NONE)
+	{
+		Inventory[AvailableSlot] = CraftInventory[fromCraftInventoryIdx];
+		CraftInventory[fromCraftInventoryIdx] = nullptr;
+		return true;
+	}
+	else
+		return false;
+
 }
 
 void AMinecraftUECharacter::OnFire()
@@ -356,7 +403,14 @@ void AMinecraftUECharacter::OpenCraftMenu()
 {
 	auto GameMode = Cast<AMinecraftUEGameMode>(GetWorld()->GetAuthGameMode());
 	if (GameMode->GetHUDState() == AMinecraftUEGameMode::EHUDState::HS_Craft_Menu)
+	{
+		for(int i =0; i < NUM_OF_CRAFT_INVENTORY_SLOTS; i++)
+		{
+			if (CraftInventory[i] == nullptr) continue;
+			MoveToInventory(i);
+		}
 		GameMode->SetHUDState(AMinecraftUEGameMode::EHUDState::HS_Ingame);
+	}
 	else
 		GameMode->SetHUDState(AMinecraftUEGameMode::EHUDState::HS_Craft_Menu);
 

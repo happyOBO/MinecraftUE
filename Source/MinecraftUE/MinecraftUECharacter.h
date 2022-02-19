@@ -108,10 +108,26 @@ public:
 	UFUNCTION(BlueprintPure, Category = Inventory)
 	UTexture2D* GetThumbnailAtInventorySlot(uint8 Slot);
 
+	/* 주어진 아이템 썸네일 가져오기 */
+	UFUNCTION(BlueprintPure, Category = Inventory)
+	UTexture2D* GetThumbnailAtCraftInventorySlot(uint8 Slot);
+
 	/* 총 인벤토리 슬롯 개수 반환 */
 	UFUNCTION(BlueprintPure, Category = Inventory)
 	int32 GetNumberOfInventorySlot();
 
+	/* 총 Craft 인벤토리 슬롯 개수 반환 */
+	UFUNCTION(BlueprintPure, Category = Inventory)
+	int32 GetNumberOfCraftInventorySlot();
+
+	/* 인벤토리에서 Craft 인벤토리로 이동*/
+	UFUNCTION(BlueprintCallable, Category = Inventory)
+	bool MoveToCraftInventory(uint8 fromInventoryIdx , uint8 toCraftInventoryIdx);
+
+
+	/* Craft 인벤토리에서 인벤토리로 이동*/
+	UFUNCTION(BlueprintCallable, Category = Inventory)
+	bool MoveToInventory(uint8 fromCraftInventoryIdx);
 
 protected:
 	
@@ -172,6 +188,8 @@ private:
 	/* 인벤토리 슬롯 개수 */
 	const int32 NUM_OF_INVENTORY_SLOTS = 36;
 
+	const int32 NUM_OF_CRAFT_INVENTORY_SLOTS = 9;
+
 	/* 현재 인벤토리 슬롯 idx */
 	int32 CurrentInventorySlot;
 
@@ -221,7 +239,7 @@ private:
 	TArray<AWieldable*> Inventory;
 
 	UPROPERTY(EditAnywhere)
-	TArray<AWieldable*> Inventory;
+	TArray<AWieldable*> CraftInventory;
 
 public: 
 	/* 플레이어가 사용하는 도구 유형 및 등급 */
