@@ -12,6 +12,8 @@
 #include "MotionControllerComponent.h"
 #include "XRMotionControllerBase.h" // for FXRMotionControllerBase::RightHandSourceId
 #include "MinecraftUEGameMode.h"
+#include "CraftCreatorComponent.h"
+
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
@@ -80,6 +82,10 @@ AMinecraftUECharacter::AMinecraftUECharacter()
 	VR_MuzzleLocation->SetupAttachment(VR_Gun);
 	VR_MuzzleLocation->SetRelativeLocation(FVector(0.000004, 53.999992, 10.000000));
 	VR_MuzzleLocation->SetRelativeRotation(FRotator(0.0f, 90.0f, 0.0f));		// Counteract the rotation of the VR gun model.
+
+	// Create a CraftCreator
+	CraftCreator = CreateDefaultSubobject<UCraftCreatorComponent>(TEXT("CRAFTCREATOR"));
+
 
 	Reach = 300.0f;
 	Inventory.SetNum(NUM_OF_INVENTORY_SLOTS);
@@ -228,10 +234,10 @@ UTexture2D* AMinecraftUECharacter::GetThumbnailAtCraftInventorySlot(uint8 Slot)
 
 UTexture2D* AMinecraftUECharacter::GetThumbnailAtPossibleCraftWeildable()
 {
-	if (PossibleCraftToggle)
-		return Thumbnail;
-	else
+	if (PossibleWieldable == nullptr)
 		return nullptr;
+	auto texture = PossibleWieldable.GetDefaultObject();
+	return texture->PickupThumbnail;
 }
 
 
@@ -279,16 +285,14 @@ bool AMinecraftUECharacter::GetCraftWeidable(uint8 toInventoryIdx)
 	if (NUM_OF_INVENTORY_SLOTS <= toInventoryIdx || toInventoryIdx < 0)
 		return false;
 
-	// 바로 스폰 되자마자 오버랩 되어서 인벤토리에 두개가 추가되는 상황
-	// 나중에 수정 필요
+	// 바로 스폰 되자마자 오버랩 되어서 인벤토리에 두개가 추가되어 멀찍이 스폰 시킴(수정 필요)
 	FVector location = GetActorLocation();
 	location.X += 100.0f;
 	auto CraftItem = Cast<AWieldable>(GetWorld()->SpawnActor<AActor>(PossibleWieldable, location, GetActorRotation()));
 	Inventory[toInventoryIdx] = CraftItem;
 	CraftItem->Hide(true);
 
-	// Craft Inventory 초기화
-	PossibleCraftToggle = false;
+	PossibleWieldable = nullptr;
 	for (int i = 0; i < NUM_OF_CRAFT_INVENTORY_SLOTS; i++)
 	{
 		CraftInventory[i] = nullptr;
@@ -540,7 +544,7 @@ void AMinecraftUECharacter::CheckForBlocks()
 		if(CurrentBlock != nullptr && !bIsBreaking)
 			CurrentBlock->ResetBlock();
 		CurrentBlock = PotentialBlock;
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, *CurrentBlock->GetName());
+		// GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, *CurrentBlock->GetName());
 	}
 }
 
@@ -552,21 +556,24 @@ void AMinecraftUECharacter::BreakBlock()
 	}
 }
 
-/* 테스트, 수정 예정 */
 void AMinecraftUECharacter::UpdatePossibleCraftWeildable()
 {
-	if (CraftInventory[0] == nullptr || CraftInventory[0]->MaterialType != AWieldable::EMaterial::Stone)
-		return ;
-	if (CraftInventory[1] == nullptr || CraftInventory[1]->MaterialType != AWieldable::EMaterial::Stone)
-		return ;
-	if (CraftInventory[2] == nullptr || CraftInventory[2]->MaterialType != AWieldable::EMaterial::Stone)
-		return ;
-	if (CraftInventory[4] == nullptr || CraftInventory[4]->MaterialType != AWieldable::EMaterial::Wooden)
-		return ;
-	if (CraftInventory[7] == nullptr || CraftInventory[7]->MaterialType != AWieldable::EMaterial::Wooden)
-		return ;
-
-	PossibleCraftToggle = true;
+	FString CraftInputs;
+	for (int i = 0; i < NUM_OF_CRAFT_INVENTORY_SLOTS; i++)
+	{
+		if (CraftInventory[i] == nullptr)
+			CraftInputs += TEXT("00");
+		else
+		{
+			CraftInputs += FString::FromInt(CraftInventory[i]->ToolType);
+			CraftInputs += FString::FromInt(CraftInventory[i]->MaterialType);
+		}
+	}
+	auto CraftWieldable = CraftCreator->GetWeidableFromID(CraftInputs);
+	if (CraftWieldable == NULL)
+		PossibleWieldable = nullptr;
+	else
+		PossibleWieldable = CraftWieldable;
 	
 
 }

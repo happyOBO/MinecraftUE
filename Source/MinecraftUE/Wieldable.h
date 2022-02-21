@@ -29,7 +29,6 @@ public:
 	{
 		Unarmed,
 		Pickaxe,
-		Axe,
 		Shovel,
 		Sword
 	};
@@ -43,6 +42,7 @@ public:
 		Golden = 8,
 		Diamond = 12,
 	}; 
+
 	UPROPERTY(EditAnywhere)
 	uint8 ToolType;
 
@@ -59,7 +59,6 @@ public:
 	UTexture2D* PickupThumbnail;
 
 	bool bIsActive;
-
 
 	UFUNCTION()
 	void OnRadiusEnter(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);

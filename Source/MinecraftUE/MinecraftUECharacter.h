@@ -136,13 +136,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Inventory)
 	bool GetCraftWeidable(uint8 toInventoryIdx);
 
-	/* 테스트 용 텍스처*/
-	UPROPERTY(EditAnywhere)
-	UTexture2D* Thumbnail;
-
-	/* 테스트 용 Weildable*/
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Blueprint Wieldable", Meta = (BlueprintProtected = "true"))
-	TSubclassOf<class AActor> PossibleWieldable;
+	UPROPERTY(VisibleAnywhere, Category = "Craft")
+	class UCraftCreatorComponent* CraftCreator;
 
 protected:
 	
@@ -248,10 +243,6 @@ private:
 
 	void UpdatePossibleCraftWeildable();
 
-	/* 테스트 용 토글 */
-	bool PossibleCraftToggle;
-
-
 	/* Timer handles */
 	FTimerHandle BlockBreakingHandle; // 도구에 따라 걸리는 시간이 다를 것임
 	FTimerHandle HitAnimHandle;
@@ -261,6 +252,9 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	TArray<AWieldable*> CraftInventory;
+
+	/* 현재 Craft Tool 로 만들 수 있는 Weildable*/
+	TSubclassOf<class AWieldable> PossibleWieldable;
 
 public: 
 	/* 플레이어가 사용하는 도구 유형 및 등급 */

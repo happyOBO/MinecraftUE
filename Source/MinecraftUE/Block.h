@@ -42,4 +42,5 @@ public:
 
 	/* breaking stage가 마지막 단계일 때 찐으로 깨지는 함수 호출*/
 	void OnBroken(bool HasRequiredPickaxe);
+
 };
