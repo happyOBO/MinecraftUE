@@ -12,6 +12,8 @@
 - `CraftCreator` 액터 컴포넌트 생성
     - 현재 저장된 크래프트 배열에 맞는 `Wieldable` 아이템이 있으면 반환
 
+<img src="./readme_assets/01.png" width="600">
+
 ### Commits on Feb 20, 2022
 
 - Craft Menu 로 Wieldable 생산 가능 (테스트용 코드 제작)
