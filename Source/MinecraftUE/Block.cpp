@@ -7,11 +7,18 @@
 // Sets default values
 ABlock::ABlock()
 {
+	bReplicates = true;
 	SM_Block = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BlockMesh"));
 	Resistance = 20.0f;
 	BreakingStage = 0.0f;
 	MinimumMaterial = 0;
 
+}
+
+void ABlock::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(ABlock, BreakingStage);
 }
 
 // Called when the game starts or when spawned
@@ -20,7 +27,6 @@ void ABlock::BeginPlay()
 	Super::BeginPlay();
 	
 }
-
 
 
 void ABlock::Break()
@@ -51,9 +57,13 @@ void ABlock::ResetBlock()
 	}
 }
 
-void ABlock::OnBroken(bool HasRequiredPickaxe)
+void ABlock::OnBroken_Implementation(bool HasRequiredPickaxe)
 {
-	GetWorld()->SpawnActor<AActor>(WieldableBlock, GetActorLocation(), GetActorRotation());
-	Destroy();
+	if (HasAuthority())
+	{
+		GetWorld()->SpawnActor<AActor>(WieldableBlock, GetActorLocation(), GetActorRotation());
+		Destroy();
+	}
 }
+
 
