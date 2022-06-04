@@ -42,6 +42,7 @@ void ABlock::Break()
 	}
 	if (BreakingStage == 5.0f)
 	{
+		UE_LOG(LogTemp, Log, TEXT("BreakOn"));
 		OnBroken(true);
 	}
 }
@@ -57,13 +58,21 @@ void ABlock::ResetBlock()
 	}
 }
 
-void ABlock::OnBroken_Implementation(bool HasRequiredPickaxe)
+void ABlock::OnBroken(bool HasRequiredPickaxe)
 {
-	if (HasAuthority())
-	{
-		GetWorld()->SpawnActor<AActor>(WieldableBlock, GetActorLocation(), GetActorRotation());
-		Destroy();
-	}
+	UE_LOG(LogTemp, Warning, TEXT("OnBroken_Implementation"));
+	GetWorld()->SpawnActor<AActor>(WieldableBlock, GetActorLocation(), GetActorRotation());
+	// Hides visible components
+	SetActorHiddenInGame(true);
+
+	// Disables collision components
+	SetActorEnableCollision(false);
+
+	// Stops the Actor from ticking
+	SetActorTickEnabled(false);
+	//Destroy();
+	
+
 }
 
 
