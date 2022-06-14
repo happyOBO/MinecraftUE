@@ -32,7 +32,11 @@ public:
 	// UFUNCTION(Server, Reliable)
 	void OnBroken(bool HasRequiredPickaxe);
 
+	UFUNCTION()
+	void OnRep_Breaking();
 
+	UFUNCTION()
+	void SetBreakBlockMaterial();
 
 
 public:
@@ -46,7 +50,7 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	float Resistance;
 
-	UPROPERTY(BlueprintReadOnly, Replicated)
+	UPROPERTY(VisibleInstanceOnly, ReplicatedUsing = OnRep_Breaking)
 	float BreakingStage;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Blueprint Wieldable Block", Meta = (BlueprintProtected = "true"))

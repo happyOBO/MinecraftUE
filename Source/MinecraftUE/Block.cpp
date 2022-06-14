@@ -33,20 +33,13 @@ void ABlock::BeginPlay()
 void ABlock::Break()
 {
 	++BreakingStage;
-	float CrackingValue = 1.0f - (BreakingStage / 5.0f); // 1 0.9 ... 0.1
 
-	UMaterialInstanceDynamic* MatInstance = SM_Block->CreateDynamicMaterialInstance(0);
+	// SetBreakBlockMaterial();
 
-	if (MatInstance != nullptr)
-	{
-		MatInstance->SetScalarParameterValue(FName("CrackingValue"), CrackingValue);
-	}
 	if (BreakingStage == 5.0f)
 	{
-		UE_LOG(LogTemp, Log, TEXT("====================BreakOn====================="));
 		OnBroken(true);
 	}
-
 }
 
 void ABlock::ResetBlock()
@@ -67,6 +60,28 @@ void ABlock::OnBroken(bool HasRequiredPickaxe)
 
 	Destroy();
 	
+
+}
+
+void ABlock::OnRep_Breaking()
+{
+	if (GetLocalRole() == ROLE_Authority)
+		return;
+
+	SetBreakBlockMaterial();
+
+}
+
+void ABlock::SetBreakBlockMaterial()
+{
+	float CrackingValue = 1.0f - (BreakingStage / 5.0f); // 1 0.9 ... 0.1
+	UMaterialInstanceDynamic* MatInstance = SM_Block->CreateDynamicMaterialInstance(0);
+
+	if (MatInstance != nullptr)
+	{
+		MatInstance->SetScalarParameterValue(FName("CrackingValue"), CrackingValue);
+	}
+
 
 }
 
