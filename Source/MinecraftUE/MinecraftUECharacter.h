@@ -268,5 +268,8 @@ public:
 	/** Returns FirstPersonCameraComponent subobject **/
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
+	UFUNCTION(Server, Reliable)
+	void ServerBreakBlock(ABlock* block);
+
 };
 

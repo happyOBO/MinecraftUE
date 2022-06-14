@@ -12,6 +12,7 @@ ABlock::ABlock()
 	Resistance = 20.0f;
 	BreakingStage = 0.0f;
 	MinimumMaterial = 0;
+	SetRemoteRoleForBackwardsCompat(ROLE_SimulatedProxy);
 
 }
 
@@ -42,9 +43,10 @@ void ABlock::Break()
 	}
 	if (BreakingStage == 5.0f)
 	{
-		UE_LOG(LogTemp, Log, TEXT("BreakOn"));
+		UE_LOG(LogTemp, Log, TEXT("====================BreakOn====================="));
 		OnBroken(true);
 	}
+
 }
 
 void ABlock::ResetBlock()
@@ -62,15 +64,8 @@ void ABlock::OnBroken(bool HasRequiredPickaxe)
 {
 	UE_LOG(LogTemp, Warning, TEXT("OnBroken_Implementation"));
 	GetWorld()->SpawnActor<AActor>(WieldableBlock, GetActorLocation(), GetActorRotation());
-	// Hides visible components
-	SetActorHiddenInGame(true);
 
-	// Disables collision components
-	SetActorEnableCollision(false);
-
-	// Stops the Actor from ticking
-	SetActorTickEnabled(false);
-	//Destroy();
+	Destroy();
 	
 
 }

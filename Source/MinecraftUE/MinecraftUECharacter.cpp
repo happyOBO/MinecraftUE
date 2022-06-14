@@ -518,42 +518,51 @@ void AMinecraftUECharacter::PlayHitAnim()
 
 void AMinecraftUECharacter::CheckForBlocks()
 {
-	FHitResult LinetraceHit;
+	if (GetLocalRole() < ROLE_Authority)
+	{
+		FHitResult LinetraceHit;
 
-	FVector StartTrace = FirstPersonCameraComponent->GetComponentLocation();
-	FVector EndTrace = (FirstPersonCameraComponent->GetForwardVector() * Reach) + StartTrace;
+		FVector StartTrace = FirstPersonCameraComponent->GetComponentLocation();
+		FVector EndTrace = (FirstPersonCameraComponent->GetForwardVector() * Reach) + StartTrace;
 
-	FCollisionQueryParams CQP;
-	CQP.AddIgnoredActor(this); // 플레이어는 raycast에 무시
+		FCollisionQueryParams CQP;
+		CQP.AddIgnoredActor(this); // 플레이어는 raycast에 무시
 	
-	GetWorld()->LineTraceSingleByChannel(LinetraceHit, StartTrace, EndTrace, ECollisionChannel::ECC_WorldDynamic, CQP);
+		GetWorld()->LineTraceSingleByChannel(LinetraceHit, StartTrace, EndTrace, ECollisionChannel::ECC_WorldDynamic, CQP);
 
-	ABlock* PotentialBlock = Cast<ABlock>(LinetraceHit.GetActor());
+		ABlock* PotentialBlock = Cast<ABlock>(LinetraceHit.GetActor());
 	
-	if (PotentialBlock != CurrentBlock && CurrentBlock != nullptr) // 블럭이 깨지기 전에 다른 블럭으로 시선이 이동되었을 때
-	{
-		CurrentBlock->ResetBlock();
-	}
-	if (PotentialBlock == NULL)
-	{
-		CurrentBlock = nullptr;
-		return;
-	}
-	else
-	{
-		if(CurrentBlock != nullptr && !bIsBreaking)
+		if (PotentialBlock != CurrentBlock && CurrentBlock != nullptr) // 블럭이 깨지기 전에 다른 블럭으로 시선이 이동되었을 때
+		{
 			CurrentBlock->ResetBlock();
-		CurrentBlock = PotentialBlock;
-		// GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, *CurrentBlock->GetName());
+		}
+		if (PotentialBlock == NULL)
+		{
+			CurrentBlock = nullptr;
+			return;
+		}
+		else
+		{
+			if(CurrentBlock != nullptr && !bIsBreaking)
+				CurrentBlock->ResetBlock();
+			CurrentBlock = PotentialBlock;
+			// GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, *CurrentBlock->GetName());
+		}
 	}
 }
 
 void AMinecraftUECharacter::BreakBlock()
 {
-	if (bIsBreaking && CurrentBlock != nullptr && !CurrentBlock->IsPendingKill())
+	if (GetLocalRole() < ROLE_Authority)
 	{
-		CurrentBlock->Break();
+		if (bIsBreaking && CurrentBlock != nullptr && !CurrentBlock->IsPendingKill())
+		{
+			ServerBreakBlock(CurrentBlock);
+
+		}
+
 	}
+		
 }
 
 void AMinecraftUECharacter::UpdatePossibleCraftWeildable()
@@ -576,4 +585,12 @@ void AMinecraftUECharacter::UpdatePossibleCraftWeildable()
 		PossibleWieldable = CraftWieldable;
 	
 
+}
+
+void AMinecraftUECharacter::ServerBreakBlock_Implementation(ABlock* block)
+{
+	if(GetLocalRole() == ROLE_Authority)
+	{
+		block->Break();
+	}
 }
