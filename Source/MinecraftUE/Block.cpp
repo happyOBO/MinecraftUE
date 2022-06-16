@@ -12,7 +12,6 @@ ABlock::ABlock()
 	Resistance = 20.0f;
 	BreakingStage = 0.0f;
 	MinimumMaterial = 0;
-	bIsBroken = false;
 	SetRemoteRoleForBackwardsCompat(ROLE_SimulatedProxy);
 
 }
@@ -39,7 +38,6 @@ void ABlock::Break()
 
 	if (BreakingStage == 5.0f)
 	{
-		bIsBroken = true;
 		OnBroken(true);
 	}
 }
@@ -87,14 +85,4 @@ void ABlock::SetBreakBlockMaterial()
 
 }
 
-void ABlock::OnRep_Broken()
-{
-	if (GetLocalRole() == ROLE_Authority)
-		return;
 
-	if (!bIsBroken)
-		return;
-
-	GetWorld()->SpawnActor<AActor>(WieldableBlock, GetActorLocation(), GetActorRotation());
-	// Destroy();
-}

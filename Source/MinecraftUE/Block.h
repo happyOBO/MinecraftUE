@@ -38,8 +38,6 @@ public:
 	UFUNCTION()
 	void SetBreakBlockMaterial();
 
-	UFUNCTION()
-	void OnRep_Broken();
 
 public:
 	// 블럭이 모두 큐브 스탵틱 메시를 갖기 위해 설정
@@ -58,7 +56,5 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Blueprint Wieldable Block", Meta = (BlueprintProtected = "true"))
 	TSubclassOf<class AActor> WieldableBlock;
 
-	UPROPERTY(VisibleInstanceOnly, ReplicatedUsing = OnRep_Broken)
-	bool bIsBroken;
 
 };

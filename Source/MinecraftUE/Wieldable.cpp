@@ -8,10 +8,6 @@
 // Sets default values
 AWieldable::AWieldable()
 {
-	// bReplicates = true;
-	// SetRemoteRoleForBackwardsCompat(ROLE_SimulatedProxy);
-	// bRelevantForLevelBounds = true;
-
 	// 매 프레임마다 tick 함수를 실행할건지 유무
 	PrimaryActorTick.bCanEverTick = true;
 
