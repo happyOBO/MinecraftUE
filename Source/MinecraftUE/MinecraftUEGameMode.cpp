@@ -23,7 +23,6 @@ void AMinecraftUEGameMode::BeginPlay()
 	Super::BeginPlay();
 	HUDState = EHUDState::HS_Ingame;
 	ApplyHUDChanges();
-	UE_LOG(LogTemp, Warning, TEXT("AMinecraftUEGameMode::BeginPlay"));
 }
 
 void AMinecraftUEGameMode::ApplyHUDChanges()

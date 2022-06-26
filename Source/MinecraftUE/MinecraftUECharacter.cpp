@@ -587,7 +587,6 @@ void AMinecraftUECharacter::UpdatePossibleCraftWeildable()
 
 }
 
-
 void AMinecraftUECharacter::ServerBreakBlock_Implementation(ABlock* block)
 {
 	if(GetLocalRole() == ROLE_Authority)
