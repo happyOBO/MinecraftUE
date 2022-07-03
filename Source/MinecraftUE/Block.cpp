@@ -32,14 +32,14 @@ void ABlock::BeginPlay()
 
 void ABlock::Break()
 {
-	++BreakingStage;
-
-	// SetBreakBlockMaterial();
-
 	if (BreakingStage == 5.0f)
 	{
 		OnBroken(true);
 	}
+
+	++BreakingStage;
+	// SetBreakBlockMaterial();
+
 }
 
 void ABlock::ResetBlock()
@@ -69,6 +69,12 @@ void ABlock::OnRep_Breaking()
 		return;
 
 	SetBreakBlockMaterial();
+
+	UE_LOG(LogTemp, Warning, TEXT("OnRep_Breaking %f"), BreakingStage);
+	if (BreakingStage == 5.0f)
+	{
+		OnBroken(true);
+	}
 
 }
 

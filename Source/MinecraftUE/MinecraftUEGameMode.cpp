@@ -22,7 +22,7 @@ void AMinecraftUEGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 	HUDState = EHUDState::HS_Ingame;
-	ApplyHUDChanges();
+	// ApplyHUDChanges();
 }
 
 void AMinecraftUEGameMode::ApplyHUDChanges()
