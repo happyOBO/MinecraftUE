@@ -80,7 +80,7 @@ void AMinecraftUECharacter::BeginPlay()
 	//Attach gun mesh component to Skeleton, doing it here because the skeleton is not yet created in the constructor
 	FP_WieldedItem->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
 
-	Mesh1P->SetHiddenInGame(true, true);
+	Mesh1P->SetHiddenInGame(false, true);
 
 }
 
@@ -121,8 +121,6 @@ void AMinecraftUECharacter::SetupPlayerInputComponent(class UInputComponent* Pla
 		PlayerInputComponent->BindAction("Interact", IE_Released, this, &AMinecraftUECharacter::EndHIt);
 
 	}
-
-	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AMinecraftUECharacter::OnResetVR);
 
 	// Bind movement events
 	PlayerInputComponent->BindAxis("MoveForward", this, &AMinecraftUECharacter::MoveForward);
