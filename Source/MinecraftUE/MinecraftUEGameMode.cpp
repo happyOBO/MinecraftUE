@@ -19,14 +19,14 @@ AMinecraftUEGameMode::AMinecraftUEGameMode()
 	}
 	
 	// use our custom HUD class
-	// HUDClass = AMinecraftUEHUD::StaticClass();
+	HUDClass = AMinecraftUEHUD::StaticClass();
 }
 
 void AMinecraftUEGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 	HUDState = EHUDState::HS_Ingame;
-	// ApplyHUDChanges();
+	ApplyHUDChanges();
 }
 
 void AMinecraftUEGameMode::ApplyHUDChanges()
