@@ -6,10 +6,30 @@
 
 ## 커밋 로그
 
+### Commits on Jul 5, 2022
+
+- 서버측 플레이어 컨트롤 오류 수정 
+ 
+### Commits on Jul 3, 2022
+
+- 불필요 코드 삭제 
+- 클라이언트 쪽 아이템 스폰 안되는 오류 수정 
+
+ 
+### Commits on Jun 15, 2022
+
+- 맵에 스폰된 블루 프린트 캐릭터 변경 사항을 블루프린트 에셋에도 적용
+- 블럭 깨면 Wieldable Item 스폰
+
+ 
+### Commits on Jun 14, 2022
+
+- Add Break Block RPC
+
 
 ### Commits on June 4, 2022
 
-- 블럭을 캐낼때 `destroy` 하는게 아니라, 비활성화 시킴
+- ~~블럭을 캐낼때 `destroy` 하는게 아니라, 비활성화 시킴~~
 - 나중에 우클릭해서 배치할 때 위치 변경 후, 활성화시키는 방식으로 할 예정
 
 ### Commits on Feb 21, 2022
