@@ -402,20 +402,20 @@ void AMinecraftUECharacter::Throw()
 
 void AMinecraftUECharacter::OpenCraftMenu()
 {
-	auto GameMode = Cast<AMinecraftUEGameMode>(GetWorld()->GetAuthGameMode());
-	if (GameMode->GetHUDState() == AMinecraftUEGameMode::EHUDState::HS_Craft_Menu)
-	{
-		for(int i =0; i < NUM_OF_CRAFT_INVENTORY_SLOTS; i++)
-		{
-			if (CraftInventory[i] == nullptr) continue;
-			MoveToInventory(i);
-		}
-		GameMode->SetHUDState(AMinecraftUEGameMode::EHUDState::HS_Ingame);
-	}
-	else
-		GameMode->SetHUDState(AMinecraftUEGameMode::EHUDState::HS_Craft_Menu);
+	//auto GameMode = Cast<AMinecraftUEGameMode>(GetWorld()->GetAuthGameMode());
+	//if (GameMode->GetHUDState() == AMinecraftUEGameMode::EHUDState::HS_Craft_Menu)
+	//{
+	//	for(int i =0; i < NUM_OF_CRAFT_INVENTORY_SLOTS; i++)
+	//	{
+	//		if (CraftInventory[i] == nullptr) continue;
+	//		MoveToInventory(i);
+	//	}
+	//	GameMode->SetHUDState(AMinecraftUEGameMode::EHUDState::HS_Ingame);
+	//}
+	//else
+	//	GameMode->SetHUDState(AMinecraftUEGameMode::EHUDState::HS_Craft_Menu);
 
-	GameMode->ApplyHUDChanges();
+	//GameMode->ApplyHUDChanges();
 }
 
 void AMinecraftUECharacter::MoveUpInventorySlot()

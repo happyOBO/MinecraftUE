@@ -13,5 +13,7 @@ UCLASS()
 class MINECRAFTUE_API AMincraftUEPlayerController : public APlayerController
 {
 	GENERATED_BODY()
+
+	virtual void BeginPlay() override;
 	
 };

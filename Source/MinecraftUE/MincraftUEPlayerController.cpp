@@ -3,3 +3,7 @@
 
 #include "MincraftUEPlayerController.h"
 
+void AMincraftUEPlayerController::BeginPlay()
+{
+	
+}
