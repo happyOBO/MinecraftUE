@@ -13,6 +13,7 @@
 #include "XRMotionControllerBase.h" // for FXRMotionControllerBase::RightHandSourceId
 #include "MinecraftUEGameMode.h"
 #include "CraftCreatorComponent.h"
+#include "MinecraftUEHUD.h"
 
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
@@ -402,20 +403,25 @@ void AMinecraftUECharacter::Throw()
 
 void AMinecraftUECharacter::OpenCraftMenu()
 {
-	//auto GameMode = Cast<AMinecraftUEGameMode>(GetWorld()->GetAuthGameMode());
-	//if (GameMode->GetHUDState() == AMinecraftUEGameMode::EHUDState::HS_Craft_Menu)
-	//{
-	//	for(int i =0; i < NUM_OF_CRAFT_INVENTORY_SLOTS; i++)
-	//	{
-	//		if (CraftInventory[i] == nullptr) continue;
-	//		MoveToInventory(i);
-	//	}
-	//	GameMode->SetHUDState(AMinecraftUEGameMode::EHUDState::HS_Ingame);
-	//}
-	//else
-	//	GameMode->SetHUDState(AMinecraftUEGameMode::EHUDState::HS_Craft_Menu);
+	APlayerController* MyController = Cast<APlayerController>(GetController());
 
-	//GameMode->ApplyHUDChanges();
+	if (!MyController)
+		return;
+
+	AMinecraftUEHUD* HUD = Cast< AMinecraftUEHUD>(MyController->GetHUD());
+	if (HUD->GetHUDState() == AMinecraftUEHUD::EHUDState::HS_Craft_Menu)
+	{
+		for (int i = 0; i < NUM_OF_CRAFT_INVENTORY_SLOTS; i++)
+		{
+			if (CraftInventory[i] == nullptr) continue;
+			MoveToInventory(i);
+		}
+		HUD->SetHUDState(AMinecraftUEHUD::EHUDState::HS_Ingame);
+	}
+	else
+		HUD->SetHUDState(AMinecraftUEHUD::EHUDState::HS_Craft_Menu);
+
+	HUD->ApplyHUDChanges();
 }
 
 void AMinecraftUECharacter::MoveUpInventorySlot()
