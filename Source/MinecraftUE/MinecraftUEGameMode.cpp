@@ -27,9 +27,3 @@ void AMinecraftUEGameMode::BeginPlay()
 	//ApplyHUDChanges();
 }
 
-void AMinecraftUEGameMode::ChangeHUDState(uint8 NewState)
-{
-	// HUDState = NewState;
-	// ApplyHUDChanges();
-}
-

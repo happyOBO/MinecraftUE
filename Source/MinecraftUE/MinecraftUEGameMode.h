@@ -17,13 +17,6 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-public:
-
-	/* ApplyHUDChanges 함수 호출시 변경된 HUD 상태 적용*/
-	UFUNCTION(BlueprintCallable, Category = "HUD Functions")
-	void ChangeHUDState(uint8 NewState);
-
-
 };
 
 
