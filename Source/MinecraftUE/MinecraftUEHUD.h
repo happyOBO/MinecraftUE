@@ -16,16 +16,12 @@ public:
 	{
 		HS_Ingame,
 		HS_Inventory,
-
 		HS_Craft_Menu,
 
 	};
 
 public:
 	AMinecraftUEHUD();
-
-	/** Primary draw call for the HUD */
-	virtual void DrawHUD() override;
 
 	void ApplyHUDChanges();
 
@@ -35,9 +31,10 @@ public:
 	/* HUDState 상태 설정 */
 	void SetHUDState(EHUDState state);
 
+protected:
+
 	/* 화면에 HUD 적용한다 (성공/실패 반환) */
 	bool ApplyHUD(TSubclassOf<class UUserWidget> WidgetToApply, bool ShowMouseCursor, bool EnableClickEvents);
-
 
 	/* ApplyHUDChanges 함수 호출시 변경된 HUD 상태 적용*/
 	UFUNCTION(BlueprintCallable, Category = "HUD Functions")
@@ -60,9 +57,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Blueprint Widgets", Meta = (BlueprintProtected = "true"))
 		TSubclassOf<class UUserWidget> CraftMenuHUDClass;
 
-private:
-	/** Crosshair asset pointer */
-	class UTexture2D* CrosshairTex;
 
 protected:
 	/* 현재 화면에 보여지고 있는 HUD */

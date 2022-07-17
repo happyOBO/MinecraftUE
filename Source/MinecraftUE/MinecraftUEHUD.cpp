@@ -12,20 +12,8 @@
 
 AMinecraftUEHUD::AMinecraftUEHUD()
 {
-	// Set the crosshair texture
-	static ConstructorHelpers::FObjectFinder<UTexture2D> CrosshairTexObj(TEXT("/Game/FirstPerson/Textures/FirstPersonCrosshair"));
-	CrosshairTex = CrosshairTexObj.Object;
 	HUDState = EHUDState::HS_Ingame;
 }
-
-
-void AMinecraftUEHUD::DrawHUD()
-{
-	Super::DrawHUD();
-
-	ApplyHUDChanges();
-}
-
 
 
 void AMinecraftUEHUD::ApplyHUDChanges()
@@ -75,7 +63,7 @@ void AMinecraftUEHUD::SetHUDState(EHUDState state)
 void AMinecraftUEHUD::ChangeHUDState(uint8 NewState)
 {
 	HUDState = NewState;
-	ApplyHUDChanges();
+	// ApplyHUDChanges();
 }
 
 bool AMinecraftUEHUD::ApplyHUD(TSubclassOf<class UUserWidget> WidgetToApply, bool ShowMouseCursor, bool EnableClickEvents)
@@ -92,8 +80,8 @@ bool AMinecraftUEHUD::ApplyHUD(TSubclassOf<class UUserWidget> WidgetToApply, boo
 
 		if (CurrentWidget != nullptr)
 		{
-			CurrentWidget->AddToPlayerScreen();
-
+			CurrentWidget->AddToViewport();
+			// CurrentWidget->AddToPlayerScreen();
 			return true;
 		}
 		else

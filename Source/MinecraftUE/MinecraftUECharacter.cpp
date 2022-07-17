@@ -91,8 +91,6 @@ void AMinecraftUECharacter::Tick(float DeltaTime)
 
 	CheckForBlocks();
 
-	//// auto GameMode = Cast<AMinecraftUEGameMode>(GetWorld()->GetAuthGameMode());
-	//// if (GameMode->GetHUDState() == AMinecraftUEGameMode::EHUDState::HS_Craft_Menu)
 	UpdatePossibleCraftWeildable();
 }
 
