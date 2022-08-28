@@ -6,6 +6,23 @@
 
 ## 커밋 로그
 
+### Commits on Jul 28, 2022
+
+- 필요없는 파일 삭제
+
+### Commits on Jul 17, 2022
+
+- Craft Menu 아이템 드래그 잘 안되는 오류 해결
+ 
+### Commits on Jul 13, 2022
+
+- 불필요 코드 제거
+
+### Commits on Jul 12, 2022
+
+- 멀티플레이어 HUD Craft_Menu 추가
+- 멀티 플레이어 인벤토리 HUD 적용 & HUD_Ingame 에서 컨트롤러가 null 이 아닐 때만 진행되도록 처리
+
 ### Commits on Jul 5, 2022
 
 - 서버측 플레이어 컨트롤 오류 수정 
