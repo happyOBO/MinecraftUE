@@ -6,8 +6,9 @@
 #include "GameFramework/Character.h"
 #include "Block.h"
 #include "Wieldable.h"
-#include "MinecraftUECharacter.generated.h"
+#include "Net/UnrealNetwork.h"
 
+#include "MinecraftUECharacter.generated.h"
 class UInputComponent;
 class USkeletalMeshComponent;
 class USceneComponent;
@@ -42,6 +43,8 @@ class AMinecraftUECharacter : public ACharacter
 public:
 	AMinecraftUECharacter();
 
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 protected:
 	virtual void BeginPlay();
 
@@ -50,7 +53,7 @@ protected:
 public:
 
 	/** Gun mesh: 1st person view (seen only by self) */
-	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+	UPROPERTY(VisibleDefaultsOnly, Replicated, Category = Mesh)
 	USkeletalMeshComponent* FP_WieldedItem;
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */

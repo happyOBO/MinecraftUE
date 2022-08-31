@@ -73,6 +73,12 @@ AMinecraftUECharacter::AMinecraftUECharacter()
 
 }
 
+void AMinecraftUECharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(AMinecraftUECharacter, FP_WieldedItem);
+}
+
 void AMinecraftUECharacter::BeginPlay()
 {
 	// Call the base class  
