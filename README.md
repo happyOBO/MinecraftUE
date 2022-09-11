@@ -1,7 +1,6 @@
 ## MinecraftUE
 
 - 마인크래프트 모작
-- [데모 영상](https://youtu.be/7yRAWYkmaq8)
 
 
 ## 커밋 로그
